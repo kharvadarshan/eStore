@@ -1,57 +1,89 @@
-import React from 'react';
-import {
-  CDBSidebar,
-  CDBSidebarContent,
-  CDBSidebarFooter,
-  CDBSidebarHeader,
-  CDBSidebarMenu,
-  CDBSidebarMenuItem,
-} from 'cdbreact';
-import { NavLink } from 'react-router-dom';
+import React, { useState ,cloneElement,dispatch} from 'react';
+import {Accordion,Card ,Button} from 'react-bootstrap';
+import { NavLink ,NavItem,NavText,NavIcon} from 'react-router-dom';
 import WomanIcon from '@mui/icons-material/Woman';
+import { useEffect } from 'react';
+import { getCategories } from '../../Redux/Category/actions';
+import { Collapse } from 'react-collapse';
+import { useSelector,useDispatch } from 'react-redux';
+import categorySlice from '../../Redux/Category/categorySlice';
+import axios from 'axios';
+import { filterProducts,setProducts } from '../../Redux/Product/productSlice';
 
 const SideBar = () => {
+  const [data,setData]=useState([]);
+  const [products,setProducts] = useState([]);
+  const dispatch = useDispatch();
+
+    useEffect(()=>{
+        axios.get('http://localhost:5001/productCategories')
+        .then(response=>{
+            setData(response.data);
+            dispatch(setProducts(data));
+        })
+        .catch(error =>{
+            console.error('Error fetching data:',error);
+        });
+    },[data,dispatch]);
+
+;
+    
+  
+    const filterData = (selectedCategory)=>{
+      //console.log(products);
+      const payload = {selectedCategory,products};
+      dispatch(filterProducts(payload));
+    }
+
+
+    const getSubCategories = (parentId) => {
+      return data.filter(item => item.parent_category_id === parentId);
+    };
+  
+
+
+
+    const CategoryItem = ({item}) =>{
+        const element =  <Accordion.Item eventKey={item.id}>
+        <Accordion.Header className=''>{item.category}</Accordion.Header>
+            <Accordion.Body>
+            {getSubCategories(item.id).map(subItem => (
+            <li key={subItem.id} className='list-unstyled  m-2' onClick={()=>filterData(subItem.category)} >
+                <a href='#' className='link-warning link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fs-5' >{subItem.category}</a>
+            </li>
+          ))}
+            </Accordion.Body>
+     </Accordion.Item>
+        if(!item.parent_category_id){
+        return React.cloneElement(element);
+        }
+    }
+    
+  
+    
+   
+  
   return(
-    <div className=''style={{ display: 'flex',overflow: 'scroll initial',marginLeft:'-13px' }}>
-      <CDBSidebar textColor="#fff" backgroundColor="#333">
-        <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
-          <a href="/" className="text-decoration-none" style={{ color: 'inherit' }}>
-            Category
-          </a>
-        </CDBSidebarHeader>
+    <div className='d-flex flex-column justify-content-start border border-2 rounded-2 p-4 m-2 bg-dark '>
+           <h1 className='text-primary mb-4'>Category</h1>
+           <Accordion>
+           {
+               data.map(item=>(
+               <CategoryItem key={item.id} item={item}/>     
+              ))
+             }
+          </Accordion>
+            
+           
+          
 
-        <CDBSidebarContent className="sidebar-content">
-          <CDBSidebarMenu>
-            <NavLink exact to="/" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="men">Men</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/tables" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="WomanIcon">Women</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/profile" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="sd">Kids</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/profile" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="sd">Party Wear</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/hero404" target="_blank" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="sds">404 page</CDBSidebarMenuItem>
-            </NavLink>
-          </CDBSidebarMenu>
-        </CDBSidebarContent>
-
-        <CDBSidebarFooter style={{ textAlign: 'center' }}>
-          <div
-            style={{
-              padding: '20px 5px',
-            }}
-          >
-            Sidebar Footer
-          </div>
-        </CDBSidebarFooter>
-      </CDBSidebar>
+         
+  
     </div>
   );
 };
 
 export default SideBar;
+
+
+

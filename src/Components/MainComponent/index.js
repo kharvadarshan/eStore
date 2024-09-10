@@ -1,94 +1,87 @@
 
- import { Container,Row,Col } from 'react-bootstrap';
-
+ import { Container,Row,Col,Button } from 'react-bootstrap';
+import { useSelector,useDispatch } from 'react-redux';
+import productSlice from '../../Redux/Product/productSlice';
+import { useEffect } from 'react';
+import { getProducts } from '../../Redux/Product/productAction';
+import axios from 'axios';
+import React ,{useState} from 'react';
+import { addCartItem } from '../../Redux/Cart/cartSlice';
 const MainComponent=()=>{
 
-     const productData = [
-         { pName:'Watch',
-          price:300,
-          img:'product-6.jpg'
-         },
-         { pName:'Tablet',
-          price:1500,
-          img:'p3.jpg'
-         },
-         { pName:'Phone',
-          price:2000,
-          img:'p2.jpg'
-         },
-         { pName:'Speaker',
-          price:700,
-          img:'p5.jpg'
-         },
-         { pName:'Mouse',
-          price:800,
-          img:'p6.jpg'
-         }
-     ]
+    // const productData = useSelector(productSlice.getInitialState);
+    // const cart = useSelector(state=>state.cartReducer);
+    //  const productData=useSelector(state=>state.productReducer.products);
+    //  const dispatch = useDispatch();
+    //  useEffect(() => {
+    //       if (!productData.length) {  
+    //           dispatch(getProducts());
+    //       }
+    //   }, []);
+
+   //const [data,setData]=useState([]);
+   const eventProducts = useSelector(state=>state.productReducer.products);
+    const cart=useSelector(state=>state.cartReducer)
+    const dispatch=useDispatch();
+    // useEffect(()=>{
+    //     axios.get('http://localhost:5001/getProducts')
+    //     .then(response=>{
+    //         setData(response.data);
+    //     })
+    //     .catch(error =>{
+    //         console.error('Error fetching data:',error);
+    //     });
+    // },[]);
+
+
+  console.log(eventProducts);
+    
+
+    const addToCart=(itemData)=>{
+        dispatch(addCartItem(itemData)); 
+    }
+
+       
+    const ProductItem = ({item}) =>{
+        const element =<Col  id="page-content-wrapper " className='col-5 border border-2 border-black ms-5 me-5 d-flex flex-column align-items-center mt-4 mb-2 shadow-lg' style={{width:'300px',height:'420px'}} key={item.id}>
+        <Container style={{width:'200px',height:'200px'}}>
+           <img src={require('../../assets/img/'+item.product_img)}  className='img mt-2 mb-2' style={{width:'100%',height:'100%'}}></img>
+        </Container>
+        <div className='d-flex flex-column mt-2'>
+        <h3><a href='#' className='link-underline link-underline-opacity-0'>{item.product_name}</a></h3>
+        <h4>${item.price}</h4>
+        </div>
+        <div className='mt-3  fs-4 text-warning'>
+            <i className='fa fa-star'></i>
+            <i className='fa fa-star'></i>
+            <i className='fa fa-star'></i>
+            <i className='fa fa-star'></i>
+            <i className='fa fa-star'></i>
+        </div>
+        <div>
+          <Button className='btn-warning mt-4 ' onClick={()=>addToCart(item)}>
+               <i className='fa fa-shopping-cart'><span>  Add to Cart</span></i>
+               
+          </Button>
+        </div>
+   </Col> ;
+      
+        return React.cloneElement(element);
+    }
 
 
     return (
          <div>
 
        <Container fluid >
-            <Row className='d-flex flex-row flex-wrap justify-content-between p-3'>
+            <Row className='d-flex flex-row flex-wrap justify-content-start p-3'>
             {
-               productData.map((product,key)=>{
-                     return(
-                     <Col  id="page-content-wrapper " className='col-4 border border-2 border-black ms-3 me-3 d-flex flex-column align-items-center mt-4 mb2 shadow-lg' style={{width:'300px',height:'350px'}}>
-                          <Container style={{width:'200px',height:'200px'}}>
-                             <img src={require('../../assets/img/'+product.img)}  className='img mt-2 mb-2' style={{width:'100%',height:'100%'}}></img>
-                          </Container>
-                          <div className='d-flex flex-column mt-2'>
-                          <h3><a href='#' className='link-underline link-underline-opacity-0'>{product.pName}</a></h3>
-                          <h4>${product.price}</h4>
-                          </div>
-                          <div className='mt-3  fs-4 text-warning'>
-                              <i className='fa fa-star'></i>
-                              <i className='fa fa-star'></i>
-                              <i className='fa fa-star'></i>
-                              <i className='fa fa-star'></i>
-                              <i className='fa fa-star'></i>
-                          </div>
-                     </Col>
-                     )
-               })
-            }
-                
+                eventProducts.map(item=>(
+                    <ProductItem item={item} key={item.id}/>
+                ))
+            }  
             </Row>
-        </Container>  
-        {/* <div className='container mt-4 bg-light fluid'  >
-            
-                
-                 <div className='row  align-items-start justify-content-start'  >
-                 <SideNavbar></SideNavbar>
-                 </div>
-             <div className='row  align-items-start justify-content-start'  >
-                   <div className='col-2  me-3'>
-                     <img src={require('../../assets/img/p2.jpg')}></img>
-                     <div className='d-flex flex-column'>
-                          <h3><a href='#' className='link-underline link-underline-opacity-0'>Mobile</a></h3>
-                          <h4>$2000</h4>
-                     </div>
-                   </div>
-                   <div className='col-2  me-3'>
-                     <img src={require('../../assets/img/p3.jpg')}></img>
-                     <div className='d-flex flex-column'>
-                          <h3><a href='#' className='link-underline link-underline-opacity-0'>Tablet</a></h3>
-                          <h4>$1000</h4>
-                     </div>
-                   </div>
-                   <div className='col-2  me-3'>
-                     <img src={require('../../assets/img/p3.jpg')}></img>
-                     <div className='d-flex flex-column'>
-                          <h3><a href='#' className='link-underline link-underline-opacity-0'>Tablet</a></h3>
-                          <h4>$1000</h4>
-                     </div>
-                   </div>
-                   
-             </div>
-        </div> */}
-              
+        </Container>     
         </div> 
         
     )

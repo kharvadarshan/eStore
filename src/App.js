@@ -16,7 +16,7 @@ function App() {
      <TopNav></TopNav>
      <CatNav></CatNav>
      <Container fluid className='d-flex flex-row' style={{ height:'100%'}}>
-     <SideBar></SideBar>
+     <SideBar className=''></SideBar>
      
      <MainComponent></MainComponent>
      </Container>

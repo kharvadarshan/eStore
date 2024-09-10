@@ -6,8 +6,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useSelector } from 'react-redux';
 const TopNav =  ()=>{
-
+     const cartItemCount = useSelector(state=>state.cartReducer.totalItems);
     return (
              <div>
               <Navbar collapseOnSelect expand="lg"
@@ -34,7 +35,7 @@ const TopNav =  ()=>{
                             </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
-                    <Nav className='justify-content-start me-3 col-5'>
+                    <Nav className='justify-content-start me-3 col-4'>
                         <form className='form-inline  d-flex flew-row align-items-center mt-2'>
                            <div className='form-group mx-sm-3 mb-2'>
                            <input className='form-control mr-2 ' type='search' placeholder='Search' aria-label='Search'/>
@@ -44,7 +45,7 @@ const TopNav =  ()=>{
                                </button>
                         </form>
                     </Nav>
-                    <Nav className=''>
+                    <Nav className='col-4'>
                         <Nav.Link href="#contactus" className=' text-primary fs-3  ms-3'>
                             Sign In 
                         </Nav.Link>
@@ -54,8 +55,17 @@ const TopNav =  ()=>{
                         <Nav.Link href="#contactus" className=' text-primary align-text-center fs-3 ms-3 '>
                                 <i className='fa fa-heart '></i>
                         </Nav.Link>
-                        <Nav.Link href="#contactus" className=' text-primary  align-text-center fs-3 ms-3 '>
-                                <i className='fa fa-shopping-cart '></i>
+                        <Nav.Link href="#contactus" className=' text-primary  align-text-center fs-3 ms-3'>
+                                <i className='fa fa-shopping-cart mr-2'>
+                                    {
+                                        cartItemCount!==0 ?
+                                        <span class="position-absolute top-1 start-70 translate-middle p-2 text-dark bg-warning badge rounded-circle fs-6">
+                                        {cartItemCount}
+                                        </span>
+                                        :<></>
+                                    }
+                                </i>
+                                
                         </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
