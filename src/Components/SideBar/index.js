@@ -8,31 +8,32 @@ import { Collapse } from 'react-collapse';
 import { useSelector,useDispatch } from 'react-redux';
 import categorySlice from '../../Redux/Category/categorySlice';
 import axios from 'axios';
-import { filterProducts,setProducts } from '../../Redux/Product/productSlice';
+import { filteredProducts,setProducts } from '../../Redux/Product/productSlice';
 
 const SideBar = () => {
   const [data,setData]=useState([]);
-  const [products,setProducts] = useState([]);
+ const [products,setProduct]=useState([]);
   const dispatch = useDispatch();
 
     useEffect(()=>{
-        axios.get('http://localhost:5001/productCategories')
+        axios.get('http://localhost:5002/productCategories')
         .then(response=>{
             setData(response.data);
-            dispatch(setProducts(data));
+            axios.get('http://localhost:5002/getProducts').then(productResponse => {
+              dispatch(setProducts(productResponse.data));
+              setProduct(productResponse.data);
+            });
         })
         .catch(error =>{
             console.error('Error fetching data:',error);
         });
-    },[data,dispatch]);
-
-;
+    },[dispatch]);
     
   
     const filterData = (selectedCategory)=>{
       //console.log(products);
       const payload = {selectedCategory,products};
-      dispatch(filterProducts(payload));
+      dispatch(filteredProducts(payload));
     }
 
 
@@ -48,7 +49,7 @@ const SideBar = () => {
         <Accordion.Header className=''>{item.category}</Accordion.Header>
             <Accordion.Body>
             {getSubCategories(item.id).map(subItem => (
-            <li key={subItem.id} className='list-unstyled  m-2' onClick={()=>filterData(subItem.category)} >
+            <li key={subItem.id} className='list-unstyled  m-2' onClick={()=>filterData(subItem.id)} >
                 <a href='#' className='link-warning link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fs-5' >{subItem.category}</a>
             </li>
           ))}
@@ -74,7 +75,22 @@ const SideBar = () => {
              }
           </Accordion>
             
-           
+           <div className='d-flex flex-column justify-content-center border border-1 bg-white p-2 mt-3 rounded-2'>
+                  <div>
+                  <h4> Filter By Price </h4>
+                  </div>
+                  <div className='d-flex flex-column'>
+                    <label className='fw-bold'>Min :</label>
+                    <input type='range' min={10} max={130} step={10} className='mt-1 mb-1'></input>
+                  </div>
+                  <div className='d-flex flex-column'>
+                    <label className='fw-bold'>Max :</label>
+                    <input type='range' min={10} max={130} step={10} className='mt-1 mb-1'></input>
+                  </div>
+                  <Button className='mt-2'>Apply Filter</Button>
+                 
+                  
+           </div>
           
 
          

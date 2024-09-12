@@ -15,9 +15,8 @@ function App() {
     <div className="App">
      <TopNav></TopNav>
      <CatNav></CatNav>
-     <Container fluid className='d-flex flex-row' style={{ height:'100%'}}>
+     <Container fluid className='d-flex flex-row h-100' style={{ height:'100%'}}>
      <SideBar className=''></SideBar>
-     
      <MainComponent></MainComponent>
      </Container>
      

@@ -2,23 +2,24 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getProducts } from "./productAction";
 const initialState={
     products :[],
- 
     status: 'idle',
     error: ""
 };
 
 const productSlice = createSlice({
-    name:"products",
+    name:"product",
     initialState,
     reducers:{
         setProducts: (state,action)=>{
-            state.products = action.data;
+            state.products = action.payload;
+            console.log(state.products);
         },
-        filterProducts : (state,action)=>{
+        filteredProducts : (state,action)=>{
                 const filterData = action.payload.products.filter((elem)=>{
-                    return elem.category_id === action.payload.selectedCategory.id;
+                    return elem.category_id === action.payload.selectedCategory;
                 })
                 state.products = filterData;
+                console.log(filterData);
         }
     },
     extraReducers: (builder)=>{
@@ -38,7 +39,7 @@ const productSlice = createSlice({
 
 });
 
-export const {filterProducts,setProducts} = productSlice.actions;
+export const {filteredProducts,setProducts} = productSlice.actions;
 export default productSlice.reducer;
 
 // import { createSlice } from "@reduxjs/toolkit";

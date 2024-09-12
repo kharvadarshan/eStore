@@ -22,7 +22,7 @@ const CatNav = ()=>{
     
     const [data,setData]=useState([]);
     useEffect(()=>{
-        axios.get('http://localhost:5001/productCategories')
+        axios.get('http://localhost:5002/productCategories')
         .then(response=>{
             setData(response.data);
         })

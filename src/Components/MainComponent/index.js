@@ -9,34 +9,10 @@ import React ,{useState} from 'react';
 import { addCartItem } from '../../Redux/Cart/cartSlice';
 const MainComponent=()=>{
 
-    // const productData = useSelector(productSlice.getInitialState);
-    // const cart = useSelector(state=>state.cartReducer);
-    //  const productData=useSelector(state=>state.productReducer.products);
-    //  const dispatch = useDispatch();
-    //  useEffect(() => {
-    //       if (!productData.length) {  
-    //           dispatch(getProducts());
-    //       }
-    //   }, []);
-
-   //const [data,setData]=useState([]);
-   const eventProducts = useSelector(state=>state.productReducer.products);
-    const cart=useSelector(state=>state.cartReducer)
-    const dispatch=useDispatch();
-    // useEffect(()=>{
-    //     axios.get('http://localhost:5001/getProducts')
-    //     .then(response=>{
-    //         setData(response.data);
-    //     })
-    //     .catch(error =>{
-    //         console.error('Error fetching data:',error);
-    //     });
-    // },[]);
-
-
-  console.log(eventProducts);
-    
-
+   
+    const productData=useSelector(state=>state.productReducer.products);
+     const dispatch = useDispatch();
+    // console.log(productData);
     const addToCart=(itemData)=>{
         dispatch(addCartItem(itemData)); 
     }
@@ -76,7 +52,7 @@ const MainComponent=()=>{
        <Container fluid >
             <Row className='d-flex flex-row flex-wrap justify-content-start p-3'>
             {
-                eventProducts.map(item=>(
+               productData.map(item=>(
                     <ProductItem item={item} key={item.id}/>
                 ))
             }  
