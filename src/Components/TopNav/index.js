@@ -7,8 +7,19 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useSelector } from 'react-redux';
+import {GoogleLogin} from 'react-google-login';
+import { useState } from 'react';
+import {gapi} from 'gapi-script';
+
 const TopNav =  ()=>{
      const cartItemCount = useSelector(state=>state.cartReducer.totalItems);
+
+     const [userDetails,setUserDetails]=useState("");
+
+     const successHandler=(res)=>{
+           setUserDetails(res.profileObj);
+     }
+
     return (
              <div>
               <Navbar collapseOnSelect expand="lg"
@@ -46,16 +57,27 @@ const TopNav =  ()=>{
                         </form>
                     </Nav>
                     <Nav className='col-4'>
-                        <Nav.Link href="#contactus" className=' text-primary fs-3  ms-3'>
-                            Sign In 
-                        </Nav.Link>
+                        <div className="mt-2 w-25">
+                          {
+                            userDetails==="" ?
+                                  <GoogleLogin 
+                                  buttonText='Login' className='text-black fw-bold fs-6'
+                                  onSuccess={successHandler}
+                                  cookiePolicy='single_host_origin'/>
+                            :
+                               <span className='text-white'>{userDetails.name}</span> 
+
+                          }
+                        
+                        </div>
+                        
                         <Nav.Link eventKey={2} href="#community" className='text-primary align-text-center fs-3 ms-3'>
                            <i className='fa fa-user-circle text-white align-text-center'></i> Register 
                         </Nav.Link>
                         <Nav.Link href="#contactus" className=' text-primary align-text-center fs-3 ms-3 '>
                                 <i className='fa fa-heart '></i>
                         </Nav.Link>
-                        <Nav.Link href="#contactus" className=' text-primary  align-text-center fs-3 ms-3'>
+                        <Nav.Link href='/Cart' className=' text-primary  align-text-center fs-3 ms-3'>
                                 <i className='fa fa-shopping-cart mr-2'>
                                     {
                                         cartItemCount!==0 ?

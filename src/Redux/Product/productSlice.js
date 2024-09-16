@@ -12,14 +12,21 @@ const productSlice = createSlice({
     reducers:{
         setProducts: (state,action)=>{
             state.products = action.payload;
-            console.log(state.products);
+           // console.log(state.products);
         },
         filteredProducts : (state,action)=>{
                 const filterData = action.payload.products.filter((elem)=>{
                     return elem.category_id === action.payload.selectedCategory;
                 })
                 state.products = filterData;
-                console.log(filterData);
+        },
+        filterByPrice: (state,action)=>{
+            const filterData = action.payload.products.filter((elem)=>{
+                return   elem.price >= action.payload.minPriceLimit &&
+                         elem.price <= action.payload.maxPriceLimit;
+            })
+
+            state.products = filterData;
         }
     },
     extraReducers: (builder)=>{
@@ -39,7 +46,7 @@ const productSlice = createSlice({
 
 });
 
-export const {filteredProducts,setProducts} = productSlice.actions;
+export const {filteredProducts,setProducts,filterByPrice} = productSlice.actions;
 export default productSlice.reducer;
 
 // import { createSlice } from "@reduxjs/toolkit";

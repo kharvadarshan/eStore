@@ -1,29 +1,29 @@
 import logo from './logo.svg';
 import   './App.css';
-
 import TopNav from './Components/TopNav';
 import CatNav from './Components/CatNav';
-import NavbarComponent from './Components/NavbarComponent';
 import MainComponent from './Components/MainComponent';
 import SideNavbar from './Components/SideNavbar';
-import SideBar from './Components/SideBar';
-import { BrowserRouter as Router } from 'react-router-dom';
+
 import { Container,Row,Col } from 'react-bootstrap';
+import LandingPage from './Components';
+import { Route,BrowserRouter as Router,Routes } from 'react-router-dom';
+import ProductDetails from './Components/ProductDetails';
+import Cart from './Components/Cart';
 function App() {
   return (
-    <Router>
+    
     <div className="App">
      <TopNav></TopNav>
      <CatNav></CatNav>
-     <Container fluid className='d-flex flex-row h-100' style={{ height:'100%'}}>
-     <SideBar className=''></SideBar>
-     <MainComponent></MainComponent>
-     </Container>
-     
-    
-    
+  
+     <Routes>
+         <Route path='/' element={<LandingPage/>}></Route>
+         <Route path='/productDetails' element={<ProductDetails/>}></Route>
+         <Route path='/Cart' element={<Cart/>}></Route>
+     </Routes>
       </div>
-    </Router>
+  
   );
 }
 

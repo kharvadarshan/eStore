@@ -8,11 +8,13 @@ import { Collapse } from 'react-collapse';
 import { useSelector,useDispatch } from 'react-redux';
 import categorySlice from '../../Redux/Category/categorySlice';
 import axios from 'axios';
-import { filteredProducts,setProducts } from '../../Redux/Product/productSlice';
+import { filteredProducts,setProducts,filterByPrice } from '../../Redux/Product/productSlice';
 
 const SideBar = () => {
   const [data,setData]=useState([]);
  const [products,setProduct]=useState([]);
+ const [minPriceLimit,setMinPriceLimit]=useState(10);
+ const [maxPriceLimit,setMaxPriceLimit]=useState(130);
   const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -35,13 +37,26 @@ const SideBar = () => {
       const payload = {selectedCategory,products};
       dispatch(filteredProducts(payload));
     }
-
-
     const getSubCategories = (parentId) => {
       return data.filter(item => item.parent_category_id === parentId);
     };
-  
 
+    const setPriceLimit = (e,stateFlag)=>{
+      if(stateFlag === "max")
+      {
+        setMaxPriceLimit(e.target.value);
+      }
+      else if(stateFlag==="min")
+      {
+        setMinPriceLimit(e.target.value);
+      }
+    }
+  
+    const applyPriceFilter = ()=>{
+       const payload = { products,minPriceLimit,maxPriceLimit};
+       //console.log(payload);
+       dispatch(filterByPrice(payload));
+    }
 
 
     const CategoryItem = ({item}) =>{
@@ -60,10 +75,6 @@ const SideBar = () => {
         }
     }
     
-  
-    
-   
-  
   return(
     <div className='d-flex flex-column justify-content-start border border-2 rounded-2 p-4 m-2 bg-dark '>
            <h1 className='text-primary mb-4'>Category</h1>
@@ -79,22 +90,16 @@ const SideBar = () => {
                   <div>
                   <h4> Filter By Price </h4>
                   </div>
-                  <div className='d-flex flex-column'>
-                    <label className='fw-bold'>Min :</label>
-                    <input type='range' min={10} max={130} step={10} className='mt-1 mb-1'></input>
+                  <div className='d-flex flex-column mt-2'>
+                    <label className=' fs-5'>Min : {minPriceLimit} </label>
+                    <input type='range' min={10} max={130} step={10} onChange={(e)=>setPriceLimit(e,"min")} className='form-range mt-1 mb-1'></input>
                   </div>
-                  <div className='d-flex flex-column'>
-                    <label className='fw-bold'>Max :</label>
-                    <input type='range' min={10} max={130} step={10} className='mt-1 mb-1'></input>
+                  <div className='d-flex flex-column mt-2'>
+                    <label className=' fs-5'>Max : {maxPriceLimit} </label>
+                    <input type='range' min={10} max={130} step={10} onChange={(e)=>setPriceLimit(e,"max")} className='form-range mt-1 mb-1'></input>
                   </div>
-                  <Button className='mt-2'>Apply Filter</Button>
-                 
-                  
+                  <Button className='mt-2 mb-1' onClick={applyPriceFilter}>Apply Filter</Button>   
            </div>
-          
-
-         
-  
     </div>
   );
 };

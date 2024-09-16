@@ -9,6 +9,7 @@ import { getCategories } from '../../Redux/Category/actions';
 import React,{ cloneElement } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 const CatNav = ()=>{
     
     // const categories=useSelector(state=>state.categoryReducer.categories);
@@ -43,7 +44,9 @@ const CatNav = ()=>{
        <>
           <div className='navbar navbar-expand-sm bg-dark navbar-light p-2 pb-3'>
               <ul className='navbar-nav fs-4'>
-                  
+                <li className='nav-item me-3 ms-3 pl-4'>
+                  <Link to="/" className='link-warning link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover' >Home</Link>
+                 </li>
                   {
                     data.map(item =>(
                         <CategoryItem key={item.id} item={item}/>     
